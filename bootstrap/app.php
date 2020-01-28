@@ -102,4 +102,11 @@ $app->router->group([
 $app->configure('auth');
 \Dusterio\LumenPassport\LumenPassport::routes($app, ['prefix' => 'v1/oauth']);
 
+$app->register(Illuminate\Mail\MailServiceProvider::class);
+
+$app->configure('mail');
+$app->alias('mailer', Illuminate\Mail\Mailer::class);
+$app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
+$app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
+
 return $app;

@@ -8,6 +8,9 @@ use Carbon\Carbon;
 use App\User;
 use Validator;
 use Illuminate\Http\Response as HttpResponse;
+use App\Mail\RestorePassword;
+use Illuminate\Support\Facades\Mail;
+use \App\Jobs\RestorePasswordJob;
 
 class AuthController extends Controller{
 
@@ -77,6 +80,13 @@ class AuthController extends Controller{
             $query = json_decode($query[0]->data);
 
             if(!empty($query) && isset($query)){
+                $mail['user']=$data['user'];
+                $mail['password']=$query;
+                //Mail::to($data['user'])->send(new RestorePassword($mail));
+
+                $job = (new \App\Jobs\RestorePasswordJob($mail));
+
+                $this->dispatch($job);
                 
                 return response()->json([
                     'code'=>'200',
